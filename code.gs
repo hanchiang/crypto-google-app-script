@@ -8,10 +8,21 @@
 
 function updateCryptoData() {
   const start = new Date();
+  if (!shouldRun()) {
+    return;
+  }
+
   process();
   const end = new Date();
   const timeElapsed = (end.getTime() - start.getTime()) / 1000;
   console.log(`Took ${timeElapsed} seconds to process`);
+}
+
+function shouldRun() {
+  const date = new Date();
+  const hour = date.getHours();
+  return true;
+  return (hour == 8 || hour == 20);
 }
 
 function process() {
@@ -47,7 +58,7 @@ function process() {
     getRangeBySheetColNameRowNum(sheet, 'Date', nextRowNum).setValue(new Date())
     getRangeBySheetColNameRowNum(sheet, 'Price USD', nextRowNum).setValue(priceUsd);
     getRangeBySheetColNameRowNum(sheet, 'Price native', nextRowNum).setValue(priceNative);
-    getRangeBySheetColNameRowNum(sheet, 'Price change 24h', nextRowNum).setValue(priceChange.h24);
+    // getRangeBySheetColNameRowNum(sheet, 'Price change 24h', nextRowNum).setValue(priceChange.h24);
     getRangeBySheetColNameRowNum(sheet, 'Volume 24h', nextRowNum).setValue(volume.h24);
     getRangeBySheetColNameRowNum(sheet, 'Num transaction buy 24h', nextRowNum).setValue(txns.h24.buys);
     getRangeBySheetColNameRowNum(sheet, 'Num transaction sell 24h', nextRowNum).setValue(txns.h24.sells);
@@ -80,14 +91,27 @@ const updateCmcData = (sheet, config, ticker, nextRowNum) => {
     }
     const cmcData = cmcCoinDetail(config.cmcId).data;
     const { watchCount, watchListRanking, isInfiniteMaxSupply, selfReportedCirculatingSupply,
-      statistics: {volumeRank, volumeMcRank, circulatingSupply, totalSupply, maxSupply,  marketCap, fullyDilutedMarketCap, rank},
+      volumeChangePercentage24h,
+      statistics: {
+        volumeRank, volumeMcRank, circulatingSupply, totalSupply, maxSupply,  marketCap, fullyDilutedMarketCap,
+        rank, priceChangePercentage24h
+      },
       holders
     } = cmcData;
-    getRangeBySheetColNameRowNum(sheet, 'Self reported circulating supply', nextRowNum).setValue(selfReportedCirculatingSupply);
-    getRangeBySheetColNameRowNum(sheet, 'Circulating supply', nextRowNum).setValue(circulatingSupply);
+    getRangeBySheetColNameRowNum(sheet, 'Price change 24h', nextRowNum).setValue(priceChangePercentage24h);
+    getRangeBySheetColNameRowNum(sheet, 'Volume change 24h', nextRowNum).setValue(volumeChangePercentage24h);
+    if (selfReportedCirculatingSupply > 0) {
+      getRangeBySheetColNameRowNum(sheet, 'Self reported circulating supply', nextRowNum).setValue(selfReportedCirculatingSupply);
+    }
+    if (circulatingSupply > 0) {
+      getRangeBySheetColNameRowNum(sheet, 'Circulating supply', nextRowNum).setValue(circulatingSupply);
+    }
     getRangeBySheetColNameRowNum(sheet, 'Total supply', nextRowNum).setValue(totalSupply);
     getRangeBySheetColNameRowNum(sheet, 'Max supply', nextRowNum).setValue(maxSupply);
-    getRangeBySheetColNameRowNum(sheet, 'Market cap', nextRowNum).setValue(marketCap);
+    if (marketCap > 0) {
+      getRangeBySheetColNameRowNum(sheet, 'Market cap', nextRowNum).setValue(marketCap);
+    }
+    
     getRangeBySheetColNameRowNum(sheet, 'Fully diluted market cap', nextRowNum).setValue(fullyDilutedMarketCap);
     getRangeBySheetColNameRowNum(sheet, 'Rank', nextRowNum).setValue(rank);
     getRangeBySheetColNameRowNum(sheet, 'Watch count', nextRowNum).setValue(watchCount);

@@ -1,8 +1,8 @@
 const dataColumns = [
-  // dex screener
-  'Date', 'Price USD', 'Price native', 'Price change 24h', 'Volume 24h', 'Num transaction buy 24h', 'Num transaction sell 24h', 'Liquidity base', 'Liquidity quote', 'Liquidity USD',
-  // cmc
-  'Self reported circulating supply', 'Circulating supply', 'Total supply', 'Max supply', 'Market cap', 'Fully diluted market cap', 'Rank', 'Watch count',
+  // mostly dex screener
+  'Date', 'Price USD', 'Price native', 'Price change 24h',  'Volume 24h', 'Volume change 24h', 'Num transaction buy 24h', 'Num transaction sell 24h', 'Liquidity base', 'Liquidity quote', 'Liquidity USD',
+  // mostly cmc
+   'Self reported circulating supply', 'Circulating supply', 'Total supply', 'Max supply', 'Market cap', 'Fully diluted market cap', 'Rank', 'Watch count',
   'Watchlist ranking', 'Volume rank', 'Volume mc rank', 'Holder count', 'Top 10 holder ratio', 'Top 20 holder ratio', 'Top 50 holder ratio', 'Top 100 holder ratio', 'Is infinite max supply',
 ]
 
