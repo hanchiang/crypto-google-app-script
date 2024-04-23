@@ -50,13 +50,12 @@ function process() {
     }
 
     const dexscreenerData = getDexScreenerPairInfo(config.chain, config.pairAddress)
-    const { priceUsd, priceNative, volume, priceChange, liquidity, txns, quoteToken, chainId, url } = dexscreenerData.pairs[0];
+    const { priceNative, volume, liquidity, txns, quoteToken, chainId, url } = dexscreenerData.pairs[0];
     
 
     // dex screener data columns
     getRangeBySheetColNameRowNum(sheet, 'Date', nextRowNum).setValue(Utilities.formatDate(new Date(), "GMT+8", 'dd/MM/yyyy HH:mm:ss'));
     getRangeBySheetColNameRowNum(sheet, 'Price native', nextRowNum).setValue(priceNative);
-    // getRangeBySheetColNameRowNum(sheet, 'Price change 24h', nextRowNum).setValue(priceChange.h24);
     getRangeBySheetColNameRowNum(sheet, 'Volume 24h', nextRowNum).setValue(volume.h24);
     getRangeBySheetColNameRowNum(sheet, 'Num transaction buy 24h', nextRowNum).setValue(txns.h24.buys);
     getRangeBySheetColNameRowNum(sheet, 'Num transaction sell 24h', nextRowNum).setValue(txns.h24.sells);
