@@ -55,7 +55,6 @@ function process() {
 
     // dex screener data columns
     getRangeBySheetColNameRowNum(sheet, 'Date', nextRowNum).setValue(Utilities.formatDate(new Date(), "GMT+8", 'dd/MM/yyyy HH:mm:ss'));
-    getRangeBySheetColNameRowNum(sheet, 'Price USD', nextRowNum).setValue(priceUsd);
     getRangeBySheetColNameRowNum(sheet, 'Price native', nextRowNum).setValue(priceNative);
     // getRangeBySheetColNameRowNum(sheet, 'Price change 24h', nextRowNum).setValue(priceChange.h24);
     getRangeBySheetColNameRowNum(sheet, 'Volume 24h', nextRowNum).setValue(volume.h24);
@@ -104,9 +103,10 @@ const updateCmcData = (sheet, config, ticker, nextRowNum) => {
     getRangeBySheetColNameRowNum(sheet, 'Is infinite max supply', nextRowNum).setValue(isInfiniteMaxSupply ? 'true' : 'false');
 
     const {
-        volumeRank, volumeMcRank, circulatingSupply, totalSupply, maxSupply,  marketCap, fullyDilutedMarketCap,
+        price, volumeRank, volumeMcRank, circulatingSupply, totalSupply, maxSupply,  marketCap, fullyDilutedMarketCap,
         rank, priceChangePercentage24h
       } = statistics;
+      getRangeBySheetColNameRowNum(sheet, 'Price USD', nextRowNum).setValue(price);
       getRangeBySheetColNameRowNum(sheet, 'Price change 24h', nextRowNum).setValue(priceChangePercentage24h);
       getRangeBySheetColNameRowNum(sheet, 'Volume rank', nextRowNum).setValue(volumeRank);
       getRangeBySheetColNameRowNum(sheet, 'Volume mc rank', nextRowNum).setValue(volumeMcRank);
