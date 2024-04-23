@@ -144,7 +144,7 @@ const getHolderIgnoreList = (ticker) => {
   return ignoreList;
 }
 
-const cmcCoinDetail = (id) => {
+const getCmcCoinDetail = (id) => {
   const url = `https://api.coinmarketcap.com/data-api/v3/cryptocurrency/detail?id=${id}`;
   const response = UrlFetchApp.fetch(url);
   if (response.getResponseCode() >= 400) {

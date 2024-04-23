@@ -1,9 +1,9 @@
 /**
  * How to use:
- * 1. Define dexscreener data in crypto-config.gs
- * 2. Define cmc data in cmc.gs
- * 3. Update worksheet-config.gs according to the columns to be displayed
- * 4. Create a sheet with the ticker name
+ * Update header row in the sheets
+ * Define dexscreener data in crypto-config.gs
+ * Define cmc data in cmc.gs
+ * Update worksheet-config.gs according to the columns to be displayed
  */
 
 function updateCryptoData() {
@@ -21,7 +21,6 @@ function updateCryptoData() {
 function shouldRun() {
   const date = new Date();
   const hour = date.getHours();
-  return true;
   return (hour == 8 || hour == 20);
 }
 
@@ -55,7 +54,7 @@ function process() {
     
 
     // dex screener data columns
-    getRangeBySheetColNameRowNum(sheet, 'Date', nextRowNum).setValue(new Date())
+    getRangeBySheetColNameRowNum(sheet, 'Date', nextRowNum).setValue(Utilities.formatDate(new Date(), "GMT+8", 'dd/MM/yyyy HH:mm:ss'));
     getRangeBySheetColNameRowNum(sheet, 'Price USD', nextRowNum).setValue(priceUsd);
     getRangeBySheetColNameRowNum(sheet, 'Price native', nextRowNum).setValue(priceNative);
     // getRangeBySheetColNameRowNum(sheet, 'Price change 24h', nextRowNum).setValue(priceChange.h24);
@@ -80,6 +79,10 @@ function process() {
 
     // set style for newly added row
     sheet.getRange(`${nextRowNum}:${nextRowNum}`).setTextStyle(SpreadsheetApp.newTextStyle().setFontSize(12).setFontFamily('Roboto').build())
+
+    const sleepMs = getRandomSleepMs();
+    console.log(`Sleeping for ${sleepMs} ms`);
+    Utilities.sleep(sleepMs);
   }
 }
 
@@ -89,36 +92,39 @@ const updateCmcData = (sheet, config, ticker, nextRowNum) => {
       console.log(`CMC id is not defined for ${ticker}`);
       return
     }
-    const cmcData = cmcCoinDetail(config.cmcId).data;
+    const cmcData = getCmcCoinDetail(config.cmcId).data;
     const { watchCount, watchListRanking, isInfiniteMaxSupply, selfReportedCirculatingSupply,
       volumeChangePercentage24h,
-      statistics: {
-        volumeRank, volumeMcRank, circulatingSupply, totalSupply, maxSupply,  marketCap, fullyDilutedMarketCap,
-        rank, priceChangePercentage24h
-      },
-      holders
+      statistics, holders
     } = cmcData;
-    getRangeBySheetColNameRowNum(sheet, 'Price change 24h', nextRowNum).setValue(priceChangePercentage24h);
+    if (statistics != null && Object.keys(statistics).length > 0) {
     getRangeBySheetColNameRowNum(sheet, 'Volume change 24h', nextRowNum).setValue(volumeChangePercentage24h);
-    if (selfReportedCirculatingSupply > 0) {
-      getRangeBySheetColNameRowNum(sheet, 'Self reported circulating supply', nextRowNum).setValue(selfReportedCirculatingSupply);
-    }
-    if (circulatingSupply > 0) {
-      getRangeBySheetColNameRowNum(sheet, 'Circulating supply', nextRowNum).setValue(circulatingSupply);
-    }
-    getRangeBySheetColNameRowNum(sheet, 'Total supply', nextRowNum).setValue(totalSupply);
-    getRangeBySheetColNameRowNum(sheet, 'Max supply', nextRowNum).setValue(maxSupply);
-    if (marketCap > 0) {
-      getRangeBySheetColNameRowNum(sheet, 'Market cap', nextRowNum).setValue(marketCap);
-    }
-    
-    getRangeBySheetColNameRowNum(sheet, 'Fully diluted market cap', nextRowNum).setValue(fullyDilutedMarketCap);
-    getRangeBySheetColNameRowNum(sheet, 'Rank', nextRowNum).setValue(rank);
     getRangeBySheetColNameRowNum(sheet, 'Watch count', nextRowNum).setValue(watchCount);
     getRangeBySheetColNameRowNum(sheet, 'Watchlist ranking', nextRowNum).setValue(watchListRanking)
-    getRangeBySheetColNameRowNum(sheet, 'Volume rank', nextRowNum).setValue(volumeRank);
-    getRangeBySheetColNameRowNum(sheet, 'Volume mc rank', nextRowNum).setValue(volumeMcRank);
     getRangeBySheetColNameRowNum(sheet, 'Is infinite max supply', nextRowNum).setValue(isInfiniteMaxSupply ? 'true' : 'false');
+
+    const {
+        volumeRank, volumeMcRank, circulatingSupply, totalSupply, maxSupply,  marketCap, fullyDilutedMarketCap,
+        rank, priceChangePercentage24h
+      } = statistics;
+      getRangeBySheetColNameRowNum(sheet, 'Price change 24h', nextRowNum).setValue(priceChangePercentage24h);
+      getRangeBySheetColNameRowNum(sheet, 'Volume rank', nextRowNum).setValue(volumeRank);
+      getRangeBySheetColNameRowNum(sheet, 'Volume mc rank', nextRowNum).setValue(volumeMcRank);
+      if (selfReportedCirculatingSupply > 0) {
+        getRangeBySheetColNameRowNum(sheet, 'Self reported circulating supply', nextRowNum).setValue(selfReportedCirculatingSupply);
+      }
+      if (circulatingSupply > 0) {
+        getRangeBySheetColNameRowNum(sheet, 'Circulating supply', nextRowNum).setValue(circulatingSupply);
+      }
+      getRangeBySheetColNameRowNum(sheet, 'Total supply', nextRowNum).setValue(totalSupply);
+      getRangeBySheetColNameRowNum(sheet, 'Max supply', nextRowNum).setValue(maxSupply);
+      if (marketCap > 0) {
+        getRangeBySheetColNameRowNum(sheet, 'Market cap', nextRowNum).setValue(marketCap);
+      }
+      
+      getRangeBySheetColNameRowNum(sheet, 'Fully diluted market cap', nextRowNum).setValue(fullyDilutedMarketCap);
+      getRangeBySheetColNameRowNum(sheet, 'Rank', nextRowNum).setValue(rank);
+    }
 
     if (holders != null && Object.keys(holders).length > 0) {
       const { holderCount, holderList } = holders;
@@ -159,6 +165,15 @@ const updateCmcData = (sheet, config, ticker, nextRowNum) => {
 }
 
 const writeHeaderRow = (sheet) => {
+  let isWritten = true;
+   for (const colName of [...dataColumns, ...nonDataColumns]) {
+    isWritten = isWritten && !getRangeBySheetColNameRowNum(sheet, colName, 1).isBlank();
+  }
+  if (isWritten) {
+    console.log(`Header row for ${sheet.getName()} is already written`);
+    return;
+  }
+
   sheet.getRange('1:1').clearContent();
 
   for (const colName of [...dataColumns, ...nonDataColumns]) {
@@ -166,6 +181,7 @@ const writeHeaderRow = (sheet) => {
     sheet.getRange(`${colLetter}1`).setValue(colName)
     sheet.getRange(`${colLetter}1`).setTextStyle(SpreadsheetApp.newTextStyle().setBold(true).setFontSize(12).setFontFamily('Roboto').build())
   }
-  
 }
+
+const getRandomSleepMs = (min = 50, max = 1000) => Math.random() * (max - min) + min;
 
