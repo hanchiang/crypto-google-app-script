@@ -182,5 +182,5 @@ const writeHeaderRow = (sheet) => {
   }
 }
 
-const getRandomSleepMs = (min = 50, max = 1000) => Math.random() * (max - min) + min;
+const getRandomSleepMs = (min = 100, max = 1000) => Math.random() * (max - min) + min;
 

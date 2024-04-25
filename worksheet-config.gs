@@ -24,19 +24,23 @@ const lastNonDataColLetter = String.fromCharCode(firstNonDataColLetter.charCodeA
 
 const charCodeToLetters = (code) => {
   const zCharCode = 'Z'.charCodeAt();
+  const aCharCode = 'A'.charCodeAt();
   if (code <= zCharCode) {
     return String.fromCharCode(code);
   }
   // at least 2 letters
   let result = '';
   // A = 65, Z = 90, AA = 90 + 1 = 91, ZZ = 90 + 26 = 116
-  while (code > zCharCode) {
+  if (code > zCharCode) {
     code -= zCharCode;
+    result += 'A';
+  }
+  while (code >= aCharCode) {
+    code -= aCharCode;
     result += 'A';
   }
   return result + String.fromCharCode('A'.charCodeAt() - 1 + code);
 }
-
 
 const isDataCol = (colName) => dataColumns.indexOf(colName) !== -1;
 const getColumnIndexByColName = (colName) => isDataCol(colName) ? dataColumnsToIndex[colName] : nonDataColumnsToIndex[colName];
@@ -47,6 +51,7 @@ const getColLetterByColName = (colName) => {
   } else {
     letters = charCodeToLetters(firstNonDataColLetter.charCodeAt() + getColumnIndexByColName(colName));
   }
+  console.log({ colName, letters })
   return letters;
 } 
 const getRangeBySheetColNameRowNum = (sheet, colName, rowNum) => sheet.getRange(`${getColLetterByColName(colName)}${rowNum}`);
