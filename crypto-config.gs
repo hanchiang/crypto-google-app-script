@@ -195,6 +195,11 @@ const dcAiConfig = {
     'tokenAddress': '0x77E06c9eCCf2E797fd462A92B6D7642EF85b0A44',
     'pairAddress': '0x2982d3295A0E1a99e6E88Ece0E93FfDfc5c761ae',
     'chain': 'ethereum'
+  },
+  'GMRX': {
+    'tokenAddress': '0x998305efDC264b9674178899FFfBb44a47134a76',
+    'pairAddress': '0x692cb71A629Aa90A8ED6c6B6e56Ce4D86760DD43',
+    'chain': 'bsc'
   }
 }
 

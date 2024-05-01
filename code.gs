@@ -96,7 +96,7 @@ const updateCmcData = (sheet, config, ticker, nextRowNum) => {
   const { watchCount, watchListRanking, isInfiniteMaxSupply, selfReportedCirculatingSupply, volumeChangePercentage24h,
     statistics, holders
   } = cmcData;
-  setValueIfAbsGreaterThanZero(sheet, 'Volume change 24h', nextRowNum, volumeChangePercentage24h);
+  setValueIfAbsGreaterThanZero(sheet, 'Volume change 24h', nextRowNum, volumeChangePercentage24h).setFontColor(getFontColor(volumeChangePercentage24h));
   setValueIfGreaterThanZero(sheet, 'Watch count', nextRowNum, watchCount);
   setValueIfGreaterThanZero(sheet, 'Watchlist ranking', nextRowNum, watchListRanking);
   setValueIfGreaterThanZero(sheet, 'Is infinite max supply', nextRowNum, isInfiniteMaxSupply ? 'true' : 'false');
@@ -108,7 +108,7 @@ const updateCmcData = (sheet, config, ticker, nextRowNum) => {
         rank, priceChangePercentage24h
     } = statistics;
     setValueIfGreaterThanZero(sheet, 'Price USD', nextRowNum, price);
-    setValueIfAbsGreaterThanZero(sheet, 'Price change 24h', nextRowNum, priceChangePercentage24h);
+    setValueIfAbsGreaterThanZero(sheet, 'Price change 24h', nextRowNum, priceChangePercentage24h).setFontColor(getFontColor(priceChangePercentage24h));
     setValueIfGreaterThanZero(sheet, 'Volume rank', nextRowNum, volumeRank);
     setValueIfGreaterThanZero(sheet, 'Volume mc rank', nextRowNum, volumeMcRank);
     
@@ -160,14 +160,24 @@ const updateCmcData = (sheet, config, ticker, nextRowNum) => {
 
 const setValueIfAbsGreaterThanZero = (sheet, colName, rowNum, value) => {
   if (Math.abs(value) > 0) {
-    getRangeBySheetColNameRowNum(sheet, colName, rowNum).setValue(value);
+    return getRangeBySheetColNameRowNum(sheet, colName, rowNum).setValue(value);
   }
 }
 
 const setValueIfGreaterThanZero = (sheet, colName, rowNum, value) => {
   if (value > 0) {
-    getRangeBySheetColNameRowNum(sheet, colName, rowNum).setValue(value);
+    return getRangeBySheetColNameRowNum(sheet, colName, rowNum).setValue(value);
   }
+}
+
+const getFontColor = (value) => {
+  if (value > 0) {
+    return 'green';
+  }
+  if (value < 0) {
+    return 'red';
+  }
+  return 'black';
 }
 
 const writeHeaderRow = (sheet) => {

@@ -41,6 +41,9 @@ const cmcMemeConfig = {
   'PAC': {
     id: 30662
   },
+  'LINDA': {
+
+  }
 };
 
 const cmcGamblefiConfig = {
@@ -121,6 +124,9 @@ const cmcAiConfig = {
   },
   'WTAO': {
     id: 23528
+  },
+  'GMRX': {
+    id: 29037
   }
 };
 
