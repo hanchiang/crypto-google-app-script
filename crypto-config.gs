@@ -64,6 +64,11 @@ const dcMemeConfig = {
     'pairAddress': '0x14c5766f8556683aF2d8023E389837044794795A',
     'chain': 'blast'
   },
+  'LINDA': {
+    'tokenAddress': '0x82cC61354d78b846016b559e3cCD766fa7E793D5',
+    'pairAddress': '0x8b5A5Fe291967Fe13322E822163eD83be709aCE3',
+    'chain': 'linea'
+  }
 };
 
 const dcGamblefiConfig = {
