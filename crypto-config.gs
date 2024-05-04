@@ -1,3 +1,11 @@
+const dcSniperBotConfig = {
+  'BANANA': {
+    'tokenAddress': '0x38E68A37E401F7271568CecaAc63c6B1e19130B4',
+    'pairAddress': '0x43DE4318b6EB91a7cF37975dBB574396A7b5B5c6',
+    'chain': 'ethereum'
+  }
+};
+
 const dcMemeConfig = {
   'PEPE': {
     'tokenAddress': '0x6982508145454Ce325dDbE47a25d4ec3d2311933',
@@ -68,6 +76,11 @@ const dcMemeConfig = {
     'tokenAddress': '0x82cC61354d78b846016b559e3cCD766fa7E793D5',
     'pairAddress': '0x8b5A5Fe291967Fe13322E822163eD83be709aCE3',
     'chain': 'linea'
+  },
+  'FLOKI': {
+    'tokenAddress': '0xcf0C122c6b73ff809C693DB761e7BaeBe62b6a2E',
+    'pairAddress': '0xca7c2771D248dCBe09EABE0CE57A62e18dA178c0',
+    'chain': 'ethereum'
   }
 };
 
@@ -203,12 +216,23 @@ const dcAiConfig = {
   }
 }
 
+const dcSocialFiConfig = {
+  'FRIEND': {
+    'tokenAddress': '0x0bD4887f7D41B35CD75DFF9FfeE2856106f86670',
+    'pairAddress': '0x7CfC830448484CDF830625373820241E61ef4acf',
+    'chain': 'base'
+  }
+}
+
+
 const cryptoConfig = {
+  ...dcSniperBotConfig,
   ...dcMemeConfig,
   ...dcGamblefiConfig,
   ...dcInjectiveConfig,
   ...dcRwaConfig,
   ...dcAiConfig,
+  ...dcSocialFiConfig
 }
 
 function initCmc(cmcConfig) {

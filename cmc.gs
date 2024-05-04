@@ -1,3 +1,9 @@
+const cmcSniperBotConfig = {
+  'BANANA': {
+    id: 28066
+  }
+}
+
 const cmcMemeConfig = {
   'PEPE': {
     id: 24478
@@ -42,7 +48,10 @@ const cmcMemeConfig = {
     id: 30662
   },
   'LINDA': {
-
+    id: ''
+  },
+  'FLOKI': {
+    id: 10804
   }
 };
 
@@ -130,12 +139,20 @@ const cmcAiConfig = {
   }
 };
 
+const cmcSocialFiConfig = {
+  'FRIEND': {
+    id: 31056
+  }
+}
+
 const cmcConfig = {
+  ...cmcSniperBotConfig,
   ...cmcMemeConfig,
   ...cmcGamblefiConfig,
   ...cmcInjectiveConfig,
   ...cmcRwaConfig,
-  ...cmcAiConfig
+  ...cmcAiConfig, 
+  ...cmcSocialFiConfig,
 };
 
 const globalHolderIgnoreList = ['0x000000000000000000000000000000000000dead'];

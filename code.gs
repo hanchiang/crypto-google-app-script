@@ -28,7 +28,8 @@ function shouldRun() {
 function process() {
   const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
   for (const [ticker, config] of Object.entries(cryptoConfig)) {
-    console.log(`Processing sheet ${ticker}`);
+    try {
+      console.log(`Processing sheet ${ticker}`);
 
     let sheet = spreadsheet.getSheetByName(ticker);
     if (sheet == null) {
@@ -80,9 +81,14 @@ function process() {
     // set style for newly added row
     sheet.getRange(`${nextRowNum}:${nextRowNum}`).setTextStyle(SpreadsheetApp.newTextStyle().setFontSize(12).setFontFamily('Roboto').build())
 
-    const sleepMs = getRandomSleepMs();
-    console.log(`Sleeping for ${sleepMs} ms`);
-    Utilities.sleep(sleepMs);
+    } catch (e) {
+      console.log(`Error processing ${ticker}`)
+      console.log(e);
+    } finally {
+      const sleepMs = getRandomSleepMs();
+      console.log(`Sleeping for ${sleepMs} ms`);
+      Utilities.sleep(sleepMs);
+    }
   }
 }
 
@@ -199,5 +205,5 @@ const writeHeaderRow = (sheet) => {
   }
 }
 
-const getRandomSleepMs = (min = 100, max = 1000) => Math.random() * (max - min) + min;
+const getRandomSleepMs = (min = 200, max = 1500) => Math.random() * (max - min) + min;
 
